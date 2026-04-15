@@ -76,7 +76,7 @@ Analiza uključuje vizualnu interpretaciju ključnih parametara.
 
 ### Korelacija varijabli
 
-![Korelacija](assets/graf_1_korelacija.png)
+![Korelacija](assets/graf_1_korelacija_(3).png)
 
 Analiza pokazuje povezanost između koncentracije metana i dubine uzoraka.
 
@@ -84,7 +84,7 @@ Analiza pokazuje povezanost između koncentracije metana i dubine uzoraka.
 
 ### Toplinska mapa terena
 
-![Toplinska mapa](assets/graf_2_mapa_metana.png)
+![Toplinska mapa](assets/graf_2_mapa_metana_(1).png)
 
 Vizualizira varijacije dubine i temperature, omogućujući identifikaciju sigurnih ruta.
 
@@ -92,7 +92,7 @@ Vizualizira varijacije dubine i temperature, omogućujući identifikaciju sigurn
 
 ### Satelitska mapa (GPS projekcija)
 
-![Satelitska mapa](assets/graf_2_mapa_metana.png)
+![Satelitska mapa](assets/graf_2_mapa_metana_(1).png)
 
 Korišten je koncept **extent mapiranja** za precizno pozicioniranje podataka na stvarne koordinate.
 
