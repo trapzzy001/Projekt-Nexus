@@ -92,7 +92,7 @@ Vizualizira varijacije dubine i temperature, omogućujući identifikaciju sigurn
 
 ### Satelitska mapa (GPS projekcija)
 
-![Satelitska mapa](assets/graf_2_mapa_metana_(1).png)
+![Satelitska mapa](assets/graph5_jezero_mission_map.jpg)
 
 Korišten je koncept **extent mapiranja** za precizno pozicioniranje podataka na stvarne koordinate.
 
