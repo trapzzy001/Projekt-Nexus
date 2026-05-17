@@ -18,14 +18,15 @@ project-nexus/
 │   └── mars_uzorci.csv
 │
 ├── src/         # Python skripte
-│   ├── data_processing.py
-│   ├── analysis.py
-│   └── uplink.py
+│   ├── zavrsna_simulacija.py
 │
 ├── assets/      # Grafovi i vizualizacije
-│   ├── korelacija.png
-│   ├── toplinska_mapa.png
-│   └── satelitska_mapa.png
+│   ├── graf_1_korelacija_(3).png
+│   ├── graf_2_mapa_metana_(1).png
+    ├── graf_4_usporedba_zona.png
+    ├── graph2_heatmap_depth.png
+    ├── graph5_jezero_mission_map.jpg
+│   └── graph1_temp_h2o.png
 │
 └── README.md    # Dokumentacija projekta
 ```
@@ -37,7 +38,7 @@ project-nexus/
 Podaci su obrađeni korištenjem Python biblioteka:
 
 * `pandas`
-* `numpy`
+* `matplot`
 
 ### Ključni koraci:
 
@@ -53,7 +54,7 @@ uzorci = pd.read_csv("data/mars_uzorci.csv")
 2. **Spajanje skupova podataka**
 
 ```python
-df = pd.merge(lokacije, uzorci, on="id_lokacije")
+df_spajanje = pd.merge(df_lokacije, df_uzorci, on='ID_Uzorka')
 ```
 
 3. **Čišćenje podataka**
@@ -62,8 +63,10 @@ df = pd.merge(lokacije, uzorci, on="id_lokacije")
 * filtriranje senzorskog šuma
 
 ```python
-df = df[(df["temperatura"] > -80) & (df["temperatura"] < 20)]
-df = df[(df["ph"] > 3) & (df["ph"] < 10)]
+df_notemp = df_spajanje[df_spajanje['Temp_Tla_C'] != 150.0]
+df_cisto = df_notemp[df_notemp['H2O_Postotak'].astype(str).str.len() < 6].copy()
+df_cisto['H2O_Postotak'] = pd.to_numeric(df_cisto['H2O_Postotak'])
+kandidati = df_cisto[(df_cisto['Metan_Senzor'] == 'Pozitivno') & (df_cisto['Organske_Molekule'] == 'Da')]
 ```
 
 4. **Normalizacija i priprema za analizu**
@@ -78,7 +81,7 @@ Analiza uključuje vizualnu interpretaciju ključnih parametara.
 
 ![Korelacija](assets/graf_1_korelacija_(3).png)
 
-Analiza pokazuje povezanost između koncentracije metana i dubine uzoraka.
+Analiza pokazuje povezanost između odnosa temperature i vlažnosti na marsu.
 
 ---
 
@@ -86,7 +89,7 @@ Analiza pokazuje povezanost između koncentracije metana i dubine uzoraka.
 
 ![Toplinska mapa](assets/graf_2_mapa_metana_(1).png)
 
-Vizualizira varijacije dubine i temperature, omogućujući identifikaciju sigurnih ruta.
+Vizualizira koncentracije metana na marsu uz pomoć heatmapa.
 
 ---
 
@@ -109,22 +112,14 @@ Ova metoda omogućuje:
 Navigacijske naredbe generiraju se u JSON formatu:
 
 ```json
-{
-  "commands": [
-    {
-      "action": "MOVE",
-      "coordinates": {
-        "lat": -18.4,
-        "lon": 77.5
-      },
-      "speed": 1.2
-    },
-    {
-      "action": "SCAN",
-      "duration": 10
+ nalog = {
+        "id_uzorka": int(redak['ID_Uzorka']),
+        "koordinate": {
+            "lat": float(redak['GPS_LAT']),
+            "long": float(redak['GPS_LONG'])
+        },
+        "akcije": ["NAVIGACIJA", "SONDIRANJE", "SLANJE_PODATAKA"]
     }
-  ]
-}
 ```
 
 ### Automatizacija generiranja naredbi
@@ -132,17 +127,11 @@ Navigacijske naredbe generiraju se u JSON formatu:
 Umjesto ručnog unosa koristi se petlja:
 
 ```python
-commands = []
-
-for _, row in df.iterrows():
-    cmd = {
-        "action": "MOVE",
-        "coordinates": {
-            "lat": row["lat"],
-            "lon": row["lon"]
-        }
-    }
-    commands.append(cmd)
+paket = {
+    "misija": "Nexus",
+    "kandidati_count": len(nalozi_lista),
+    "nalozi": nalozi_lista
+}
 ```
 
 Prednosti:
@@ -197,14 +186,6 @@ git clone https://github.com/username/project-nexus.git
 cd project-nexus
 ```
 
-### 2. Pokretanje analize
-
-```bash
-python src/analysis.py
-```
-
----
-
 ## Tehnologije
 
 * Python 3.x
@@ -229,6 +210,6 @@ Projekt razvijen u sklopu inženjerskog programa **Projekt Nexus - Lean Brcic**.
 
 ---
 
-## 📄 Licenca
+## Licenca
 
 Ovaj projekt je otvorenog koda i dostupan pod MIT licencom
